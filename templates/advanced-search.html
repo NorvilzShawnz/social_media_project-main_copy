@@ -95,16 +95,16 @@
                     <span class="basic-content-text">Sort by: </span>
                     <select name="sorting-1" class="basic-content-text input-field">
                         <option value="N/A" class="basic-content-text">N/A</option>
-                        <option value="Time-Posted" class="basic-content-text">Time Posted</option>
-                        <option value="Like-Count" class="basic-content-text">Like Count</option>
-                        <option value="Share-Count" class="basic-content-text">Share Count</option>
-                        <option value="Reply-Count" class="basic-content-text">Reply Count</option>
+                        <option value="date_time_posted" class="basic-content-text">Time Posted</option>
+                        <option value="like_cnt" class="basic-content-text">Like Count</option>
+                        <option value="share_cnt" class="basic-content-text">Share Count</option>
+                        <option value="comment_cnt" class="basic-content-text">Reply Count</option>
                     </select>
                     <span class="basic-content-text"> in </span>
                     <select name="sorting-order-1" class="basic-content-text input-field">
                         <option value="N/A" class="basic-content-text">N/A</option>
-                        <option value="Like-Count" class="basic-content-text">Descending</option>
-                        <option value="Share-Count" class="basic-content-text">Ascending</option>
+                        <option value="Descending" class="basic-content-text" selected>Descending</option>
+                        <option value="Ascending" class="basic-content-text">Ascending</option>
                     </select>
                     <span class="basic-content-text"> order</span>
 
@@ -112,16 +112,16 @@
                     <span class="basic-content-text">...then sort by: </span>
                     <select name="sorting-2" class="basic-content-text input-field">
                         <option value="N/A" class="basic-content-text">N/A</option>
-                        <option value="Time-Posted" class="basic-content-text">Time Posted</option>
-                        <option value="Like-Count" class="basic-content-text">Like Count</option>
-                        <option value="Share-Count" class="basic-content-text">Share Count</option>
-                        <option value="Reply-Count" class="basic-content-text">Reply Count</option>
+                        <option value="date_time_posted" class="basic-content-text">Time Posted</option>
+                        <option value="like_cnt" class="basic-content-text">Like Count</option>
+                        <option value="share_cnt" class="basic-content-text">Share Count</option>
+                        <option value="comment_cnt" class="basic-content-text">Reply Count</option>
                     </select>
                     <span class="basic-content-text"> in </span>
                     <select name="sorting-order-2" class="basic-content-text input-field">
                         <option value="N/A" class="basic-content-text">N/A</option>
-                        <option value="Like-Count" class="basic-content-text">Descending</option>
-                        <option value="Share-Count" class="basic-content-text">Ascending</option>
+                        <option value="Descending" class="basic-content-text" selected>Descending</option>
+                        <option value="Ascending" class="basic-content-text">Ascending</option>
                     </select>
                     <span class="basic-content-text"> order</span>
     
@@ -129,24 +129,8 @@
                     <div id="submit-form-div">
                         <input name="submit" type="submit" value="Perform Search" class="main-btn">
                     </div>
-    
                 </form>
             </div>
-            {% if postsInFeed %}
-            <div id="filtered-posts">
-                {% for post in postsInFeed %}
-                    <div class="post">
-                        <h3>{{ post.title }}</h3>
-                        <p>{{ post.contents }}</p>
-                        <p><strong>Likes:</strong> {{ post.like_cnt }}</p>
-                        <p><strong>Replies:</strong> {{ post.reply_cnt }}</p>
-                        <p><strong>Shares:</strong> {{ post.share_cnt }}</p>
-                    </div>
-                {% endfor %}
-            </div>
-        {% else %}
-            <p>No posts found with the selected filters.</p>
-        {% endif %}
         </main>
     </div>
 

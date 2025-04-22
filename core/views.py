@@ -3,6 +3,7 @@ from json import dumps
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth import get_user_model, login, authenticate
+from django.db.models import Q
 
 from .models import VibeGroup, VibeUser, VibePost, VibeComment
 # Importing sample data for testing purposes
@@ -145,74 +146,55 @@ def advanced_search(request):
     posts = VibePost.objects.all()
 
     if request.method == "POST":
+        # — filter by author
         post_author = request.POST.get("post_author", "").strip()
         if post_author:
             posts = posts.filter(author__username__icontains=post_author)
 
+        # — filter by content words
         all_words = request.POST.get("all_of_these_words", "")
+        for w in all_words.split():
+            posts = posts.filter(contents__icontains=w)
+
         any_words = request.POST.get("any_of_these_words", "")
-        none_words = request.POST.get("none_of_these_words", "")
-
-        if all_words:
-            for word in all_words.split():
-                posts = posts.filter(contents__icontains=word)
-    
         if any_words:
-            queries = Q()
-            for word in any_words.split():
-                queries |= Q(contents__icontains=word)
-            posts = posts.filter(queries)
+            q_any = Q()
+            for w in any_words.split():
+                q_any |= Q(contents__icontains=w)
+            posts = posts.filter(q_any)
 
-        if none_words:
-            for word in none_words.split():
-                posts = posts.exclude(contents__icontains=word)
+        none_words = request.POST.get("none_of_these_words", "")
+        for w in none_words.split():
+            posts = posts.exclude(contents__icontains=w)
 
-        try:
-            likes_lt = int(request.POST.get("likes_lt", 9999999999.9))
-            posts = posts.filter(like_cnt__lt=likes_lt)
-        except ValueError:
-            pass
+        # — numeric filters (likes, replies, shares)
+        def try_int(key, default):
+            try:
+                return int(request.POST.get(key, default))
+            except ValueError:
+                return default
 
-        try:
-            likes_gt = int(request.POST.get("likes_gt", float(-9999999999.9)))
-            posts = posts.filter(like_cnt__gt=likes_gt)
-        except ValueError:
-            pass
+        likes_lt = try_int("likes_lt", 10**12)
+        likes_gt = try_int("likes_gt", -1)
+        posts = posts.filter(like_cnt__lt=likes_lt, like_cnt__gt=likes_gt)
 
-        try:
-            replies_lt = int(request.POST.get("replies_lt", float(9999999999.9)))
-            posts = posts.filter(comment_cnt__lt=replies_lt)
-        except ValueError:
-            pass
+        replies_lt = try_int("replies_lt", 10**12)
+        replies_gt = try_int("replies_gt", -1)
+        posts = posts.filter(comment_cnt__lt=replies_lt, comment_cnt__gt=replies_gt)
 
-        try:
-            replies_gt = int(request.POST.get("replies_gt", float(-9999999999.9)))
-            posts = posts.filter(comment_cnt__gt=replies_gt)
-        except ValueError:
-            pass
+        shares_lt = try_int("shares_lt", 10**12)
+        shares_gt = try_int("shares_gt", -1)
+        posts = posts.filter(share_cnt__lt=shares_lt, share_cnt__gt=shares_gt)
 
-
-        try:
-            shares_lt = int(request.POST.get("shares_lt", float(9999999999.9)))
-            posts = posts.filter(share_cnt__gt=shares_lt)
-        except ValueError:
-            pass
-
-        try:
-            shares_gt = int(request.POST.get("shares_gt", float(-9999999999.9)))
-            posts = posts.filter(share_cnt__gt=shares_gt)
-        except ValueError:
-            pass
-
+        # — date filters
         date_before = request.POST.get("date_before")
-        date_after = request.POST.get("date_after")
-
+        date_after  = request.POST.get("date_after")
         if date_before:
             posts = posts.filter(date_time_posted__lt=date_before)
-
         if date_after:
             posts = posts.filter(date_time_posted__gt=date_after)
-    
+
+        # — boolean filters
         was_edited = request.POST.get("was_edited")
         if was_edited == "Yes":
             posts = posts.filter(is_edited=True)
@@ -225,30 +207,37 @@ def advanced_search(request):
         elif has_media == "No":
             posts = posts.filter(media__isnull=True)
 
+        # — sorting
+        def do_sort(key, order):
+            if key and key != "N/A":
+        # map user-visible sort keys to model fields
+                sort_map = {
+            "Time Posted": "date_time_posted",
+            "Like Count": "like_cnt",
+            "Reply Count": "comment_cnt",
+            "Share Count": "share_cnt",
+        }
+                db_field = sort_map.get(key, key.lower())
+                prefix = "-" if order == "Descending" else ""
+                return f"{prefix}{db_field}"
+            return None
 
-        sorting_1 = request.POST.get("sorting-1")
-        sorting_order_1 = request.POST.get("sorting-order-1")
-        sorting_2 = request.POST.get("sorting-2")
-        sorting_order_2 = request.POST.get("sorting-order-2")
+        sort1 = do_sort(request.POST.get("sorting-1"),       request.POST.get("sorting-order-1"))
+        sort2 = do_sort(request.POST.get("sorting-2"),       request.POST.get("sorting-order-2"))
+        order_by = [s for s in (sort1, sort2) if s]
+        if order_by:
+            posts = posts.order_by(*order_by)
 
-        if sorting_1 != "N/A":
-            if sorting_order_1 == "Descending":
-                posts = posts.order_by(f"-{sorting_1.lower()}")
-            else:
-                posts = posts.order_by(sorting_1.lower())
+        # — finally: render the **home** template with only the filtered posts
+        return render(request, 'index.html', {
+            'postsInFeed': posts,
+            'authenticatedUser': authenticatedUser,
+        })
 
-        if sorting_2 != "N/A":
-            if sorting_order_2 == "Descending":
-                posts = posts.order_by(f"-{sorting_2.lower()}")
-            else:
-                posts = posts.order_by(sorting_2.lower())
-
-    context = {
-        "postsInFeed": posts,
-        "authenticatedUser": authenticatedUser,
-    }
-
-    return render(request, "advanced-search.html", context)
+    # GET: just show the blank advanced‑search form
+    return render(request, 'advanced-search.html', {
+        'authenticatedUser': request.user,
+    })
 
 def view_post(request):
     # authenticatedUser = request.user
