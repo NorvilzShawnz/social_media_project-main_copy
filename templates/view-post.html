@@ -1,0 +1,54 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <title>VibeSpace</title>
+    <link rel="icon" href="{% static 'img/smiling-cube.png' %}" type="image/x-icon">
+    <link rel="stylesheet" href="{% static 'css/fonts.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/site-header-footer.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/vibespace-main-styles.css' %}" type="text/css">
+</head>
+
+<body>
+    <div id="header-main-wrap">
+        {% include "include/header.html" with showSearchBar=False %}
+    
+        <main>
+            <!-- Sidebar with buttons such as "View Profile" -->
+            {% include "include/left-sidebar.html" with authenticatedUser=authenticatedUser %}
+            
+            <div>
+                <!-- Main Post View (Make sure listWithViewedPost only has one post) -->
+                {% include "include/display-posts.html" with postsToDisplay=listWithViewedPost postClass="post-box" %}
+
+                <!-- UI allowing user to post a comment -->
+                {% for post in listWithViewedPost %}
+
+                <div class="main-content-box comment-box">
+                    {% include "include/user-display-container.html" with user=authenticatedUser displayViewProfileBtn=False %}
+                    <form action="/view-post/" method="POST">
+                        {% csrf_token %}
+
+                        <textarea class="basic-content-text input-field" name="comment_content" placeholder="Make a comment..."></textarea>
+                        <input type="hidden" id="post_replied_to_id" name="post_replied_to_id" value="{{post.id}}">
+                        
+                        <button type="submit" class="main-btn">Make Comment</button>
+                    </form>
+                </div>
+                {% endfor %}
+
+                <!-- Displaying Comments -->
+                {% include "include/display-posts.html" with postsToDisplay=postComments postClass="comment-box" %}
+            </div>
+    
+            <!-- Sidebar labeled "Who To Follow" -->
+            {% include "include/who-to-follow.html" with usersToFollow=usersToFollow %}
+        </main>
+    </div>
+
+    {% include "include/footer.html" %}
+</body>

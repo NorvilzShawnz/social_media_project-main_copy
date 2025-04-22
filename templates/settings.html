@@ -1,0 +1,83 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <title>VibeSpace</title>
+    <link rel="icon" href="{% static 'img/smiling-cube.png' %}" type="image/x-icon">
+    <link rel="stylesheet" href="{% static 'css/fonts.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/site-header-footer.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/vibespace-main-styles.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/settings.css' %}" type="text/css">
+</head>
+
+<body>
+    <div id="header-main-wrap">
+
+        {% include "include/header.html" with showSearchBar=False %}
+    
+        <main>
+            <div class="main-content-box" id="settings-box">
+                <div id="settings-nav-div">
+                    <a href="/">
+                        <button class="main-btn" id="back-to-home-page">Back to Home</button>
+                    </a>
+                    <a href="/signin">
+                        <button class="main-btn" id="log-out-btn">Log Out</button>
+                    </a>
+                </div>
+                <hr>
+                
+                <form id="credentials-form" action="/settings/" method="POST">
+                    {% csrf_token %}
+        
+                    <p class="basic-content-text">Display Name</p>
+                    <input name="display_name" type="text" value='{{authenticatedUser.displayname}}' class="basic-content-text input-field" >
+                    <hr>
+                    <p class="basic-content-text">Username</p>
+                    <input name="username" type="text" value="{{authenticatedUser.username}}" class="basic-content-text input-field" >
+                    <hr>
+
+                    <p class="basic-content-text">Password</p>
+                    <input name="password" type="password" value="{{authenticatedUser.password}}" class="basic-content-text input-field">
+                    <hr>
+
+                    <p class="basic-content-text">Email</p>
+                    <input name="email" type="email" value="{{authenticatedUser.email}}" class="basic-content-text input-field">
+                    <hr>
+
+                    <p class="basic-content-text">Bio</p>
+                    <textarea name="bio" class="basic-content-text input-field">{{authenticatedUser.bio}}</textarea>
+                    <hr>
+
+                    <label for="birthdate" class="basic-content-text">Birth Date</label>
+                    <input name="birthdate" type="date" value="{{authenticatedUser.date_of_birth}}" class="basic-content-text input-field">
+                    <hr>
+
+                    <label for="profile-picture" class="basic-content-text">Profile Picture</label>
+                    <input name="profile_picture" type="file" class="basic-content-text input-field">
+                    {% with image_url=authenticatedUser.profile_pic %}
+                    <img src="{% static image_url %}" width="150px" height="150px">
+                    {% endwith %}
+                    <hr>
+
+                    <label for="profile-banner" class="basic-content-text">Profile Banner</label>
+                    <input name="profile_banner" type="file" class="basic-content-text input-field">
+                    {% with image_url=authenticatedUser.banner_pic %}
+                    <img src="{% static image_url %}" height="250px">
+                    {% endwith %}
+                    <hr>
+
+                    <div id="submit-form-div">
+                        <input name="submit" type="submit" value="Save Changes" class="main-btn">
+                    </div>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    {% include "include/footer.html" %}
+</body>

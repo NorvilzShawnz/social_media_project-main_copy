@@ -1,0 +1,116 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <title>VibeSpace</title>
+    <link rel="icon" href="{% static 'img/smiling-cube.png' %}" type="image/x-icon">
+    <link rel="stylesheet" href="{% static 'css/fonts.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/site-header-footer.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/vibespace-main-styles.css' %}" type="text/css">
+</head>
+
+<body>
+    <div id="header-main-wrap">
+        {% include "include/header.html" with showSearchBar=True %}
+    
+        <main>
+            <!-- Sidebar with buttons such as "View Profile" -->
+            {% include "include/left-sidebar.html" with authenticatedUser=authenticatedUser %}
+            
+            <div>
+                <!-- UI allowing user to make a post -->
+                {% include "include/make-a-post.html" with authenticatedUser=authenticatedUser postClass="post-box" %}
+    
+                <!-- User's Post Feed -->
+                {% include "include/display-posts.html" with authenticatedUser=authenticatedUser postsToDisplay=postsInFeed postClass="post-box"%}
+    
+            </div>
+    
+            <!-- Sidebar labeled "Who To Follow" -->
+            {% include "include/who-to-follow.html" with usersToFollow=usersToFollow %}
+        </main>
+    </div>
+
+    {% include "include/footer.html" %}
+    
+    <script>
+document.addEventListener("DOMContentLoaded", function () {
+    const posts = document.querySelectorAll(".post");
+
+    posts.forEach(post => {
+        // LIKE
+        const likeBtn = post.querySelector(".like-btn");
+        const likeCount = post.querySelector(".like-count");
+
+        likeBtn.addEventListener("click", () => {
+            let count = parseInt(likeCount.textContent);
+            likeCount.textContent = ++count;
+            likeBtn.disabled = true;
+            likeBtn.textContent = "❤️ Liked";
+        });
+
+        // SHARE
+        const shareBtn = post.querySelector(".share-btn");
+        const shareCount = post.querySelector(".share-count");
+
+        shareBtn.addEventListener("click", () => {
+            let count = parseInt(shareCount.textContent);
+            shareCount.textContent = ++count;
+            shareBtn.disabled = true;
+            shareBtn.textContent = "🔄 Shared";
+            
+            const postId = post.dataset.postId;
+            const link = `${window.location.origin}/post/${postId}`;
+            navigator.clipboard.writeText(link);
+            alert("Post link copied to clipboard:\n" + link);
+        });
+
+        // COMMENT
+        const commentInput = post.querySelector(".comment-input");
+        const commentBtn = post.querySelector(".comment-btn");
+        const commentSection = post.querySelector(".comments-section");
+
+        commentBtn.addEventListener("click", () => {
+            const text = commentInput.value.trim();
+            if (text) {
+                const comment = document.createElement("p");
+                comment.classList.add("comment");
+                comment.textContent = text;
+                commentSection.appendChild(comment);
+                commentInput.value = "";
+
+                // Optional: Update comment count visually (just cosmetic for now)
+                const commentMeta = post.querySelector(".post-actions span:last-child");
+                let match = commentMeta.textContent.match(/\d+/);
+                let currentCount = match ? parseInt(match[0]) : 0;
+                commentMeta.textContent = `💬 ${++currentCount} Comments`;
+            }
+        });
+    });
+});
+        </script>
+</body>
+
+
+
+<script>
+    let displayedPosts = [] 
+</script>
+
+{% for post in postsInFeed %}
+<script>
+    displayedPosts.push({
+        id : "{{post.id}}",
+        strToMatchWithKeywords : "{{post.contents | escapejs}} {{post.author.displayname | escapejs}} {{post.author.username | escapejs}}"
+    })
+</script>
+{% endfor %}
+
+<script src="{% static 'js/basic-search.js' %}"></script>
+<script>
+    basicSearchSetup("basic-post-search-bar", "basic-post-search-btn", displayedPosts, "post-display-container-")
+</script>

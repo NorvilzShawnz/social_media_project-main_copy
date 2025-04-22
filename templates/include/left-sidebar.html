@@ -1,0 +1,34 @@
+{% load static %}
+
+<div class="main-content-box" id="sidebar-box">
+    <a href='/profile?profile_owner_id={{authenticatedUser.id}}'>
+        <button class="main-btn" id="view-your-profile-btn">
+            <img class="profile-img" src="{{authenticatedUser.profile_pic.url}}">    
+            View your profile
+        </button>
+    </a>
+
+    <a href='/find-users'>
+        <button class="main-btn" id="find-users-btn">
+            <img src="{% static '/img/icons8-user.png' %}"> Find Users
+        </button>
+    </a>
+
+    <a href='/find-groups'>
+        <button class="main-btn" id="find-groups-btn">
+            <img src="{% static '/img/icons8-user-group.png' %}"> Find Groups
+        </button>
+    </a>
+
+    <a href='/find-users'>
+        <button class="main-btn" id="friend-requests-btn">
+            <img src="{% static '/img/icons8-user-request.png' %}"> Friend Requests
+        </button>
+    </a>
+
+    <a href='/settings'>
+        <button class="main-btn" id="account-settings-btn">
+            <img src="{% static '/img/icons8-settings.png' %}"> Account Settings
+        </button>
+    </a>
+</div>

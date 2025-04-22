@@ -1,0 +1,23 @@
+{% load static %}
+
+
+<div class="user-display-container" id="user-display-container-{{user.id}}">
+    <div class="user-display">
+        <img class="profile-img" src="{{user.profile_pic.url}}">
+
+        <div>
+            <p>
+                <b>{{user.displayname}}</b>
+                {% if user.is_verified == True %}
+                <img class="verify-check-mark" src="{% static 'img/Verification-Check-Mark.png' %}">
+                {% endif %}
+            </p>
+            <p>@{{user.username}}</p>
+        </div>
+    </div>
+    {% if displayViewProfileBtn %}
+    <a href="/profile?profile_owner_id={{user.id}}">
+        <button class="main-btn view-profile-btn">View Profile</button>
+    </a>
+    {% endif %}
+</div>

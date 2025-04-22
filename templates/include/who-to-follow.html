@@ -1,0 +1,12 @@
+{% load static %}
+
+<div class="main-content-box" id="who-to-follow-box">
+    <h2>Who to follow</h2>
+    
+    {% for user in usersToFollow %}
+    <hr>
+    {% include "include/user-display-container.html" with user=user displayViewProfileBtn=True %}
+
+    {% endfor %}
+
+</div>

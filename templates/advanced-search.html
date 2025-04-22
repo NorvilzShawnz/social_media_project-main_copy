@@ -1,0 +1,154 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <title>VibeSpace</title>
+    <link rel="icon" href="{% static 'img/smiling-cube.png' %}" type="image/x-icon">
+    <link rel="stylesheet" href="{% static 'css/fonts.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/site-header-footer.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/vibespace-main-styles.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/advanced-search.css' %}" type="text/css">
+</head>
+
+<body>
+    {% include "include/header.html" with showSearchBar=False %}
+
+    <div id="header-main-wrap">
+        <main>
+            <div class="main-content-box" id="advanced-search-box">
+                <div id="settings-nav-div">
+                    <a href="/">
+                        <button id="back-to-home-btn" class="main-btn" >Back to Home</button>
+                    </a>
+                </div>
+                <hr>
+                
+                <form action="{% url 'advanced_search' %}" method="POST" id="advanced-search-form" >
+                    {% csrf_token %}
+                    <h3 class="basic-content-text">Post Author Username </h3>
+                    <span class="basic-content-text">Is one of these: </span>
+                    <input name="post_author" type="text" class="basic-content-text input-field">
+                    <hr>
+
+                    <h3 class="basic-content-text">Post Contains</h3>
+                    <span class="basic-content-text">All of these words: </span>
+                    <input name="all_of_these_words" type="text" class="basic-content-text input-field">
+                    <br>
+                    <span class="basic-content-text">Any of these words: </span>
+                    <input name="any_of_these_words" type="text" class="basic-content-text input-field">
+                    <br>
+                    <span class="basic-content-text">None of these words: </span>
+                    <input name="none_of_these_words" type="text" class="basic-content-text input-field">
+                    <hr>
+                    
+                    <h3 class="basic-content-text">Number of Likes</h3>
+                    <span class="basic-content-text">is less than</span>
+                    <input name="likes_lt" type="text" value="9999999999999999" class="basic-content-text input-field">
+                    <span class="basic-content-text">and greater than</span>
+                    <input name="likes_gt" type="text" value="-9999999999999999" class="basic-content-text input-field">
+    
+                    <hr>
+                    <h3 class="basic-content-text">Number of Replies</h3>
+                    <span class="basic-content-text">is less than</span>
+                    <input name="replies_lt" type="text" value="9999999999999999" class="basic-content-text input-field">
+                    <span class="basic-content-text">and greater than</span>
+                    <input name="replies_gt" type="text" value="-9999999999999999" class="basic-content-text input-field">
+    
+                    <hr>
+                    <h3 class="basic-content-text">Number of Shares</h3>
+                    <span class="basic-content-text">is less than</span>
+                    <input name="shares_lt" type="text" value="9999999999999999" class="basic-content-text input-field">
+                    <span class="basic-content-text">and greater than</span>
+                    <input name="shares_gt" type="text" value="-9999999999999999" class="basic-content-text input-field">
+                    
+                    <hr>
+                    <h3 class="basic-content-text">Time Posted</h3>
+                    <span class="basic-content-text">is before</span>
+                    <input name="date_before" type="datetime-local" value="3000-01-01T12:00" class="basic-content-text input-field">
+                    <br>
+                    <span class="basic-content-text">is after</span>
+                    <input name="date_after" type="datetime-local" value="1000-01-01T12:00" class="basic-content-text input-field">
+                    
+                    <hr>
+                    <h3 class="basic-content-text">Other Filters</h3>
+                    <span class="basic-content-text">Was Edited?</span>
+                    <select name="has-media" class="basic-content-text input-field">
+                        <option value="N/A" class="basic-content-text">N/A</option>
+                        <option value="Yes" class="basic-content-text">Yes</option>
+                        <option value="No" class="basic-content-text">No</option>
+                    </select>
+
+                    <br>
+                    <span class="basic-content-text">Has Media?</span>
+                    <select name="has-media" class="basic-content-text input-field">
+                        <option value="N/A" class="basic-content-text">N/A</option>
+                        <option value="Yes" class="basic-content-text">Yes</option>
+                        <option value="No" class="basic-content-text">No</option>
+                    </select>
+
+                    <hr>
+                    <h3 class="basic-content-text">Sorting</h3>
+                    <span class="basic-content-text">Sort by: </span>
+                    <select name="sorting-1" class="basic-content-text input-field">
+                        <option value="N/A" class="basic-content-text">N/A</option>
+                        <option value="Time-Posted" class="basic-content-text">Time Posted</option>
+                        <option value="Like-Count" class="basic-content-text">Like Count</option>
+                        <option value="Share-Count" class="basic-content-text">Share Count</option>
+                        <option value="Reply-Count" class="basic-content-text">Reply Count</option>
+                    </select>
+                    <span class="basic-content-text"> in </span>
+                    <select name="sorting-order-1" class="basic-content-text input-field">
+                        <option value="N/A" class="basic-content-text">N/A</option>
+                        <option value="Like-Count" class="basic-content-text">Descending</option>
+                        <option value="Share-Count" class="basic-content-text">Ascending</option>
+                    </select>
+                    <span class="basic-content-text"> order</span>
+
+                    <br>
+                    <span class="basic-content-text">...then sort by: </span>
+                    <select name="sorting-2" class="basic-content-text input-field">
+                        <option value="N/A" class="basic-content-text">N/A</option>
+                        <option value="Time-Posted" class="basic-content-text">Time Posted</option>
+                        <option value="Like-Count" class="basic-content-text">Like Count</option>
+                        <option value="Share-Count" class="basic-content-text">Share Count</option>
+                        <option value="Reply-Count" class="basic-content-text">Reply Count</option>
+                    </select>
+                    <span class="basic-content-text"> in </span>
+                    <select name="sorting-order-2" class="basic-content-text input-field">
+                        <option value="N/A" class="basic-content-text">N/A</option>
+                        <option value="Like-Count" class="basic-content-text">Descending</option>
+                        <option value="Share-Count" class="basic-content-text">Ascending</option>
+                    </select>
+                    <span class="basic-content-text"> order</span>
+    
+                    <hr>
+                    <div id="submit-form-div">
+                        <input name="submit" type="submit" value="Perform Search" class="main-btn">
+                    </div>
+    
+                </form>
+            </div>
+            {% if postsInFeed %}
+            <div id="filtered-posts">
+                {% for post in postsInFeed %}
+                    <div class="post">
+                        <h3>{{ post.title }}</h3>
+                        <p>{{ post.contents }}</p>
+                        <p><strong>Likes:</strong> {{ post.like_cnt }}</p>
+                        <p><strong>Replies:</strong> {{ post.reply_cnt }}</p>
+                        <p><strong>Shares:</strong> {{ post.share_cnt }}</p>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p>No posts found with the selected filters.</p>
+        {% endif %}
+        </main>
+    </div>
+
+    {% include "include/footer.html" %}
+</body>

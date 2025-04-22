@@ -1,0 +1,16 @@
+@font-face {
+    src: url("/static/fonts/havox-vintage-demo.regular.otf");
+    font-family: HavoxVintage;
+}
+@font-face {
+    src: url("/static/fonts/Inter-VariableFont_opsz,wght.ttf");
+    font-family: Inter;
+}
+@font-face {
+    src: url("/static/fonts/Karla-ExtraBold.ttf");
+    font-family: Karla;
+}
+@font-face {
+    src: url("/static/fonts/milker.regular.otf");
+    font-family: Milker;
+}

@@ -1,0 +1,24 @@
+{% load static %}
+
+<header>
+    <div id="header-content">
+        <a href='/'>
+            <div class="header-div">
+                <img id="logo-img" src="{% static 'img/smiling-cube.png' %}">
+                <span id="site-name">VibeSpace</span>
+            </div>
+        </a>
+
+        {% if showSearchBar == True %}
+        <div class="header-div">
+            <input type="text" class="search-bar" id="basic-post-search-bar" placeholder="Search Posts...">
+            <button class="header-btn search-btn" id="basic-post-search-btn">
+                <img src="{% static 'img/icons8-mag-glass.png' %}" width="16px" height="16px">
+            </button>
+            <a href="/advanced-search">
+                <button class="header-btn" id="adv-search-btn">Advanced Post Search</button>
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</header>

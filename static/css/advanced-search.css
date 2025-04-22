@@ -1,0 +1,33 @@
+#advanced-search-box {
+    margin-left: auto;
+    margin-right: auto;
+    width: 600px;
+    height: auto;
+}
+#advanced-search-box h3 {
+    text-align: center;
+}
+
+#advanced-search-box input[type="text"] {
+    width: 10%;
+}
+#advanced-search-box input[name$="these_words"] {
+    width: 65%;
+}
+#advanced-search-box input[name="post_author"] {
+    width: 75%;
+}
+
+#advanced-search-box textarea {
+    height: 100px;
+    width: 98%;
+}
+#submit-form-div {
+    margin: 0;
+    height: 50px;
+    width: 125px;
+}
+.radio-selection-div {
+    display: flex;
+    justify-content: space-around;
+}

@@ -1,0 +1,81 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <title>VibeSpace</title>
+    <link rel="icon" href="{% static 'img/smiling-cube.png' %}" type="image/x-icon">
+    <link rel="stylesheet" href="{% static 'css/fonts.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/site-header-footer.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/vibespace-main-styles.css' %}" type="text/css">
+</head>
+
+<body>
+    <div id="header-main-wrap">
+        {% include "include/header.html" with showSearchBar=True %}
+
+        <main>
+            <div class="main-content-box" id="main-profile-content-box">
+                <div class="user-display" id="main-user-display">
+                    <img class="profile-img main-profile-img" src="{{group.group_pic.url}}">
+    
+                    <div>
+                        <p><b>{{group.name}}</b></p>
+                        <p>{{group.member_cnt}} Members</p>
+                    </div>
+                </div>
+                
+                <button class="main-btn">Join Group</button>
+                <a href='/find-groups'>
+                    <button class="main-btn" id="find-groups-btn">Find Other Groups</button>
+                </a>
+
+                <hr>
+                <h3 class="basic-content-text">About This Group</h3>
+                {% if group.description is not None %}
+                <p class="basic-content-text">{{group.description}}</p>
+                {% else %}
+                <p class="basic-content-text">No Description Provided</p>
+                {% endif %}
+                <hr>
+                <h3 class="basic-content-text">Created</h3>
+                <p class="basic-content-text">{{group.date_created}}</p>
+                <hr>
+                <h3 class="basic-content-text">Created by</h3>
+                {% include "include/user-display-container.html" with user=group.group_creator displayViewProfileBtn=False %}
+            </div>
+    
+            <div>
+                {% include "include/make-a-post.html" with authenticatedUser=authenticatedUser postClass="post-box" %}
+    
+                {% include "include/display-posts.html" with postsToDisplay=groupPosts postClass="post-box" %}
+    
+            </div>
+
+            <!-- This invisible div with nothing in it is here to help position the elements. -->
+            <div class="invisible-div"></div>
+    </div>
+    {% include "include/footer.html" %}
+
+</body>
+
+<script>
+    let displayedPosts = [] 
+</script>
+
+{% for post in groupPosts %}
+<script>
+    displayedPosts.push({
+        id : "{{post.id}}",
+        strToMatchWithKeywords : "{{post.contents | escapejs}} {{post.author.displayname | escapejs}} {{post.author.username | escapejs}}"
+    })
+</script>
+{% endfor %}
+
+<script src="{% static 'js/basic-search.js' %}"></script>
+<script>
+    basicSearchSetup("basic-post-search-bar", "basic-post-search-bar", displayedPosts, "post-display-container-")
+</script>

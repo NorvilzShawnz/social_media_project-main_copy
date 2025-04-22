@@ -1,0 +1,101 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <title>VibeSpace</title>
+    <link rel="icon" href="{% static 'img/smiling-cube.png' %}" type="image/x-icon">
+    <link rel="stylesheet" href="{% static 'css/fonts.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/site-header-footer.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/vibespace-main-styles.css' %}" type="text/css">
+</head>
+
+<body>
+    <div id="header-main-wrap">
+        {% include "include/header.html" with showSearchBar=True %}
+        
+        <img id="profile-banner-img" src="{{profileOwner.banner_pic.url}}">
+        
+        <main>
+            <div class="main-content-box" id="main-profile-content-box">
+                <div class="user-display" id="main-user-display">
+                    <img class="profile-img main-profile-img" src="{{profileOwner.profile_pic.url}}">
+    
+                    <div>
+                        <p>
+                            <b>{{profileOwner.displayname}}</b>
+
+                            {% if profileOwner.is_verified == True %}
+                            <img class="verify-check-mark" src="{% static 'img/Verification-Check-Mark.png' %}">
+                            {% endif %}
+                        </p>
+                        <p>@{{profileOwner.username}}</p>
+                    </div>
+                </div>
+                
+                <p class="basic-content-text"><b>{{profileOwner.post_cnt}}</b> Posts &emsp; <b>{{profileOwner.follower_cnt}}</b> Followers &emsp; <b>{{profileOwner.follows_cnt}}</b> Following</p>
+                
+                {% if profileOwner.id == authenticatedUser.id %}
+                <a href='/settings'>
+                    <button class="main-btn" id="account-settings-btn">Account Settings</button>
+                </a>
+                {% else %}
+                <button class="main-btn">Follow</button>
+                <button class="main-btn">Send Friend Request</button>
+                {% endif %}
+
+                <hr>
+                <h3 class="basic-content-text">About Me</h3>
+                <p class="basic-content-text">{{profileOwner.bio}}</p>
+                <hr>
+                <h3 class="basic-content-text">Location</h3>
+                <p class="basic-content-text">{{profileOwner.location}}</p>
+                <hr>
+                <h3 class="basic-content-text">Join Date</h3>
+                <p class="basic-content-text">{{profileOwner.date_joined}}</p>
+            </div>
+    
+            <div>
+                {% if profileOwner.id == authenticatedUser.id %}
+                {% include "include/make-a-post.html" with authenticatedUser=profileOwner postClass="post-box" %}
+                {% endif %}
+    
+                {% if postsUserMade %}
+
+                {% include "include/display-posts.html" with postsToDisplay=postsUserMade postClass="post-box" %}
+
+                {% else %}
+                <div class="main-content-box post-box">
+                    <p class="basic-content-text"><b>@{{profileOwner.username}} has not yet posted anything.</b></p>
+                </div>
+                {% endif %}
+            </div>
+    
+            <!-- Sidebar labeled "Who To Follow" -->
+            {% include "include/who-to-follow.html" with usersToFollow=usersToFollow %}
+        </main>
+    </div>
+
+    {% include "include/footer.html" %}
+</body>
+
+<script>
+    let displayedPosts = [] 
+</script>
+
+{% for post in postsUserMade %}
+<script>
+    displayedPosts.push({
+        id : "{{post.id}}",
+        strToMatchWithKeywords : "{{post.contents | escapejs}}"
+    })
+</script>
+{% endfor %}
+
+<script src="{% static 'js/basic-search.js' %}"></script>
+<script>
+    basicSearchSetup("basic-post-search-bar", "basic-post-search-bar", displayedPosts, "post-display-container-")
+</script>

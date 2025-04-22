@@ -1,0 +1,21 @@
+{% load static %}
+
+<!-- Use a form to handle POST request -->
+<form method="POST" class="main-content-box post-box">
+    {% csrf_token %}
+
+    <div class="user-display">
+        <img class="profile-img" src="{{authenticatedUser.profile_pic.url}}">
+
+        <div>
+            <p><b>{{authenticatedUser.displayname}}</b></p>
+            <p>@{{authenticatedUser.username}}</p>
+        </div>
+    </div>
+
+    <!-- Use a textarea with name 'content' to match view logic -->
+    <textarea class="basic-content-text input-field" name="content" placeholder="Make a post..."></textarea>
+
+    <!-- Submit button to send the form -->
+    <button type="submit" class="main-btn">Create Post</button>
+</form>

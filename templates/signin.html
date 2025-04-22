@@ -1,0 +1,47 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <title>VibeSpace</title>
+    <link rel="icon" href="{% static 'img/smiling-cube.png' %}" type="image/x-icon">
+    <link rel="stylesheet" href="{% static 'css/fonts.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/site-header-footer.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/vibespace-main-styles.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/signin-signup.css' %}" type="text/css">
+</head>
+
+<body>
+    {% include "include/header.html" with showSearchBar=False %}
+
+    <div class="main-content-box" id="signin-signup-box">
+        <h1>Sign Into VibeSpace</h1>
+        <hr>
+        <form id="credentials-form" action="/signin/" method="POST">
+    {% csrf_token %}
+
+    <p class="basic-content-text">Username</p>
+    <input class="input-field" type="text" name="username" placeholder="Username" required>
+
+    <p class="basic-content-text">Password</p>
+    <input class="input-field" type="password" name="password" placeholder="Password" required>
+
+    <div id="remember-me-option">
+        <input type="checkbox" id="checkbox1" name="remember_me">
+        <label for="checkbox1" class="basic-content-text">Remember Me</label>
+    </div>
+
+    <div id="submit-form-div">
+        <input class="main-btn" id="signin-signup-btn" type="submit" value="Sign In">
+    </div>
+</form>
+
+        <p class="basic-content-text" id="switch-between-signin-and-signup">Don't have an account? <a href="/signup">Sign Up</a></p>
+
+    </div>
+
+    {% include "include/footer.html" %}
+</body>

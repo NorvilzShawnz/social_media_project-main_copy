@@ -1,0 +1,68 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <title>VibeSpace</title>
+    <link rel="icon" href="{% static 'img/smiling-cube.png' %}" type="image/x-icon">
+    <link rel="stylesheet" href="{% static 'css/fonts.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/site-header-footer.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/vibespace-main-styles.css' %}" type="text/css">
+</head>
+
+<body>
+    <div id="header-main-wrap">
+        {% include "include/header.html" with showSearchBar=False %}
+        
+        <main>
+            {% include "include/left-sidebar.html" with authenticatedUser=authenticatedUser %}
+
+            <div>
+                <div class="main-content-box">
+                    <input type="text" class="search-bar" id="basic-group-search-bar" placeholder="Search Groups...">
+                    <button id="basic-group-search-btn" class="header-btn search-btn">
+                        <img src="{% static 'img/icons8-mag-glass.png' %}" width="16px" height="16px">
+                    </button>
+                </div>
+
+                <div class="main-content-box search-results-box">
+                    {% for group in groupsDisplayed %}
+                    
+                    {% include "include/group-display-container.html" with group=group displayViewGroupBtn=True %}
+
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- This invisible div with nothing in it is here to help position the elements. -->
+            <div class="invisible-div"></div>
+        </main>
+    </div>
+
+    {% include "include/footer.html" %}
+
+</body>
+
+
+
+<script> 
+    let displayedGroupObjs = [] 
+</script>
+
+{% for group in groupsDisplayed %}
+<script>
+    displayedGroupObjs.push({
+        id : "{{group.id}}",
+        strToMatchWithKeywords : "{{group.name | escapejs}}"
+    })
+</script>
+{% endfor %}
+
+
+<script src="{% static 'js/basic-search.js' %}"></script>
+<script>
+    basicSearchSetup("basic-group-search-bar", "basic-group-search-btn", displayedGroupObjs, "group-display-container-")
+</script>

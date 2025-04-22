@@ -1,0 +1,50 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <title>VibeSpace</title>
+    <link rel="icon" href="{% static 'img/smiling-cube.png' %}" type="image/x-icon">
+    <link rel="stylesheet" href="{% static 'css/fonts.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/site-header-footer.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/vibespace-main-styles.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/signin-signup.css' %}" type="text/css">
+</head>
+
+<body>
+    {% include "include/header.html" with showSearchBar=False %}
+
+
+    <div class="main-content-box" id="signin-signup-box">
+        <h1>Create a VibeSpace Account</h1>
+        <hr>
+        <form id="credentials-form" action="/signup/" method="POST">
+    {% csrf_token %}
+
+    <p class="basic-content-text">Username</p>
+    <input class="input-field" type="text" name="username" placeholder="Create a Username" required>
+
+    <p class="basic-content-text">Password</p>
+    <input class="input-field" type="password" name="password1" placeholder="Create a Password" required>
+
+    <p class="basic-content-text">Confirm Password</p>
+    <input class="input-field" type="password" name="password2" placeholder="Confirm your Password" required>
+
+            <p class="basic-content-text">Email</p>
+            <input class="input-field" type="email" name="email" placeholder="Email" required>
+
+            <p class="basic-content-text">Date of Birth</p>
+            <input class="input-field" type="date" name="dob" placeholder="Date of Birth">
+
+         <div id="submit-form-div">
+                <input class="main-btn" id="signin-signup-btn" type="submit" value="Sign Up">
+            </div>
+        </form>
+
+        <p class="basic-content-text" id="switch-between-signin-and-signup">Already have an account? <a href="/signin">Sign In</a></p>
+
+    </div>
+</body>

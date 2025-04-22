@@ -1,0 +1,84 @@
+body {
+    position: relative;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+    border: none;
+    background: rgb(221, 216, 216);
+}
+#header-main-wrap {
+    padding-bottom: 4rem;
+}
+
+header {
+    padding: 12px;
+    background-color: white;
+    border-bottom: solid rgb(98, 97, 97) 2px;
+}
+#header-content{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+#header-content a {
+    text-decoration: none;
+}
+#logo-img {
+    height: 35px;
+    width: 40px;
+    display: inline;
+}
+#site-name {
+    margin: 0 6px;
+    padding: 0;
+    color: #ff7b00;
+    font-size: 30px;
+    font-family: HavoxVintage, sans-serif;
+    text-shadow: 0 0 1pt black;
+}
+
+
+.header-div {
+    display: flex;
+}
+.header-btn {
+    margin: 0;
+    border-radius: 16px;
+    padding: 0 12px;
+    border: none;
+    background-color: rgb(232, 232, 232);
+    font-family: Inter, sans-serif;
+    font-weight: 600;
+}
+#adv-search-btn {
+    height: 36px;
+    margin-left: 6px;
+}
+#settings-btn {
+    height: 36px;
+}
+
+
+
+.header-btn:hover {
+    cursor: pointer;
+    background-color: rgb(185, 183, 183);
+}
+#logo-img:hover {
+    cursor: pointer;
+}
+#site-name:hover {
+    cursor: pointer;
+}
+
+footer { /* Footer positioning method found on www.freecodecamp.org */
+    position: absolute;
+    bottom: 0;
+    width: 98.4%;
+    height: 2.5rem;
+
+    margin-bottom: 0;
+    padding: 12px;
+    background-color: white;
+    border-top: solid rgb(98, 97, 97) 2px;
+}

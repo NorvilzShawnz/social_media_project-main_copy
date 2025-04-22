@@ -1,0 +1,46 @@
+{% load static %}
+
+{% for post in postsToDisplay %}
+<div class="main-content-box {{postClass}}" data-post-id="{{ post.id }}">
+    {% include "include/user-display-container.html" with user=post.author displayViewProfileBtn=True %}
+
+    <hr>
+    <p class="basic-content-text">{{post.contents}}</p>
+    
+    {% if post.media.url is not None %}
+    <img class="post-img" src="{{post.media.url}}">
+    {% endif %}
+
+    <!-- ADDED -->
+    <div class="post-btn-div">
+        <div>
+            <a href="/?post_to_like_id={{post.id}}">
+                <button class="post-btn like-share-comment-btn">
+                    <img src="{% static '/img/icons8-favorite.png' %}">{{post.like_cnt}}
+                </button>
+            </a>
+
+            {% if postClass == "post-box" %}
+            <a href="/?post_shared_id={{post.id}}">
+                <button class="post-btn share-btn like-share-comment-btn">
+                    <img src="{% static '/img/icons8-shares.png' %}">{{post.share_cnt}}
+                </button>
+            </a>
+            <a href="/view-post?viewed_post_id={{post.id}}">
+                <button class="post-btn like-share-comment-btn">
+                    <img src="{% static '/img/icons8-comment.png' %}">{{post.comment_cnt}}
+                </button>
+            </a>
+            {% endif %}
+        </div>
+        <div>
+            {% if postClass == "post-box" %}
+            <a href="/view-post?viewed_post_id={{post.id}}">
+                <button class="post-btn view-post-btn">View Post</button>
+            </a>
+            {% endif %}
+        </div>
+    </div>
+    <p class="time-posted">Posted {{post.date_time_posted}}.</p>
+</div>
+{% endfor %}
